@@ -4,6 +4,7 @@ import { ActionTile, AppHeader, Button, SectionHeader, TransactionItem } from ".
 import { formatBRL, type Transaction } from "../data";
 import { useDragScroll, usePullToRefresh, useScrolledPast } from "../hooks";
 import { PayIllustration, TransferIllustration, type ApproachMode } from "./Approach";
+import nubankLogo from "../assets/nubank-logo.png";
 import mpLogo from "../assets/mercadopago-logo.png";
 
 // Figma: Top > Tabs (19:53)
@@ -128,7 +129,7 @@ export function Home({ balance, transactions, hideBalance, onToggleBalance, onOp
         {bankBanner && (
           <div className="home-bank-wrap">
             <div className="home-bank">
-              <span className="home-bank__logo" aria-hidden />
+              <img className="home-bank__logo" src={nubankLogo} alt="" width={24} height={24} />
               <button className="home-bank__label" onClick={soon("Conectar banco")}>Conectar banco</button>
               <button className="home-icon-link" aria-label="Dispensar" onClick={() => setBankBanner(false)}><CircleX size={20} /></button>
             </div>

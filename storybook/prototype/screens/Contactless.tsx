@@ -1,7 +1,6 @@
 import sendArrow from "../assets/contactless-send-arrow.svg";
 import receiveArrow from "../assets/contactless-receive-arrow.svg";
 import nfcWaves from "../assets/contactless-nfc-waves.svg";
-import checkDark from "../assets/contactless-check-dark.svg";
 import checkLight from "../assets/contactless-check-light.svg";
 
 /** Símbolo de pagamento por aproximação (anel + ondas animadas), centralizado em (cx, cy). Usar dentro de um <svg>. */
@@ -21,7 +20,7 @@ export type ContactlessKind = "nfc" | "send" | "receive";
 export type ContactlessPhase = "waiting" | "processing" | "success";
 
 const SUCCESS = {
-  send: <img src={checkDark} width={52} height={37} alt="" />,
+  send: <span className="contactless__emoji" role="img" aria-label="dinheiro com asas">💸</span>,
   receive: <span className="contactless__emoji" role="img" aria-label="rosto com cifrões">🤑</span>,
   nfc: <img src={checkLight} width={52} height={37} alt="" />,
 };
@@ -29,7 +28,7 @@ const SUCCESS = {
 /**
  * IllustrationContactless (Figma 27:1648) — NFC | Send | Receive + variações Sucesso.
  * Anel/borda/fundo em CSS para transicionar entre estados; seta, ondas e check são os vetores do Figma.
- * Send: amarelo (sucesso amarelo + check) · Receive: azul → verde (sucesso + 🤑) · NFC: branco → verde (sucesso + check).
+ * Send: amarelo (sucesso amarelo + 💸) · Receive: azul → verde (sucesso + 🤑) · NFC: branco → verde (sucesso + check).
  */
 export function ContactlessIllustration({ kind, phase = "waiting" }: { kind: ContactlessKind; phase?: ContactlessPhase }) {
   return (

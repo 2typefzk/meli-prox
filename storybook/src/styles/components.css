@@ -75,7 +75,7 @@
 }
 .m-icon-btn--labeled { padding: 0 var(--space-4); }
 .m-icon-btn--surface { background: var(--color-surface-default); box-shadow: var(--shadow-elevation-1); }
-.m-icon-btn--brand { background: rgba(255,255,255,.45); color: var(--color-text-on-brand); }
+.m-icon-btn--brand { background: rgba(255,255,255,.7); color: var(--color-text-on-brand); }
 .m-icon-btn--lg { min-width: var(--size-control-lg); height: var(--size-control-lg); }
 /* Hover / toque: mesma aparência do Style Surface (fundo branco + elevation/1) */
 .m-icon-btn:hover, .m-icon-btn:active { background: var(--color-surface-default); box-shadow: var(--shadow-elevation-1); color: var(--color-text-primary); }
@@ -191,16 +191,17 @@
   background: var(--color-surface-default); border-radius: var(--radius-4xl) var(--radius-4xl) 0 0;
   box-shadow: var(--shadow-elevation-bottom-nav);
 }
+/* O item ocupa toda a altura da barra: o marcador da tab ativa encosta na borda superior (como no app) */
 .m-bottom-nav__item {
-  position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px;
-  border: 0; background: none; cursor: pointer; padding-top: var(--space-2);
-  font: var(--type-label-md); font-family: var(--font-base); color: var(--color-text-primary);
+  position: relative; align-self: stretch; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 5px; /* ícone 3px mais alto que a tab Pix */
+  border: 0; background: none; cursor: pointer; padding: 0;
+  font: var(--type-label-md); font-family: var(--font-base); font-size: calc(13px * var(--font-scale, 1) - 1px); color: var(--color-text-primary);
 }
 .m-bottom-nav__item[aria-current="page"] { color: var(--color-text-accent); }
 .m-bottom-nav__item[aria-current="page"]::before {
-  content: ""; position: absolute; top: -2px; width: 32px; height: 4px; border-radius: var(--radius-full); background: var(--color-text-accent);
+  content: ""; position: absolute; top: 0; width: 32px; height: 4px; border-radius: 0 0 var(--radius-full) var(--radius-full); background: var(--color-text-accent);
 }
-.m-bottom-nav__pix-wrap { min-width: 56px; display: flex; flex-direction: column; align-items: center; gap: 2px; font: var(--type-label-md); font-family: var(--font-base); }
+.m-bottom-nav__pix-wrap { min-width: 56px; display: flex; flex-direction: column; align-items: center; gap: 2px; font: var(--type-label-md); font-family: var(--font-base); font-size: calc(13px * var(--font-scale, 1) - 1px); }
 .m-bottom-nav__pix {
   margin-top: -28px; width: var(--size-fab-md); height: var(--size-fab-md); border-radius: 50%; border: 0; cursor: pointer;
   display: grid; place-items: center; background: var(--color-brand-pix); color: #fff; box-shadow: var(--shadow-glow-pix);
@@ -379,6 +380,11 @@
   border-radius: var(--radius-4xl) var(--radius-4xl) 0 0; box-shadow: var(--shadow-elevation-modal); animation: sheet-up .25s ease-out;
 }
 .sheet__handle { width: 32px; height: 4px; margin: 0 auto var(--space-3); border-radius: var(--radius-full); background: var(--color-text-tertiary); }
+/* Arrastar para fechar: a alça tem área de toque própria; sem rolagem interna, o drawer inteiro arrasta */
+.sheet__grab { margin-top: calc(var(--space-3) * -1); padding-top: var(--space-3); cursor: grab; touch-action: none; }
+.sheet { touch-action: none; transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+.sheet.is-scrollable { touch-action: pan-y; }
+.sheet.is-dragging { transition: none; cursor: grabbing; user-select: none; }
 .sheet__head { display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4) var(--space-3); }
 .sheet__spark { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--gradient-assistant-fab); color: var(--color-action-primary-default); }
 @keyframes sheet-up { from { transform: translateY(100%); } }

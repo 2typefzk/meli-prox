@@ -39,7 +39,7 @@ export function classifyPixKey(raw: string): KeyType | null {
 export const ME = { name: "Felipe Marinelli", document: "***.456.789-**" };
 export const NFC_MERCHANT = { name: "Padaria Pão Dourado", legal: "Padaria Pão Dourado LTDA", document: "00.000.000/0001-00", amount: 18.9 };
 export const NFC_RECIPIENT = { name: "Giuliana Cecilio", document: "***.123.456-**" };
-export const NFC_SENDER = { name: "Ana Paula Souza", document: "***.482.193-**", amount: 25 };
+export const NFC_SENDER = { name: "Felipe Marinelli", document: "***.482.193-**", amount: 25 };
 
 /** "21/10/2026 às 15:04" */
 export function receiptDate(d = new Date()) {

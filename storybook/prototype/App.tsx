@@ -5,7 +5,7 @@ import { Pix } from "./screens/Pix";
 import { PixConfirm, PixAmount, PixSuccess } from "./screens/PixFlow";
 import { Placeholder } from "./screens/Placeholder";
 import { AssistantSheet, type AssistantAction } from "./screens/AssistantSheet";
-import { PrototypeSettings, DEFAULT_PROTO_SETTINGS, type ProtoSettings } from "./screens/PrototypeSettings";
+import { PrototypeSettings, loadProtoSettings, saveNames, nameOr, type ProtoSettings } from "./screens/PrototypeSettings";
 import { Approach, type ApproachMode } from "./screens/Approach";
 import { StandBy } from "./screens/StandBy";
 import { NfcTransfer } from "./screens/NfcTransfer";
@@ -42,7 +42,11 @@ export function App() {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [protoSettings, setProtoSettings] = useState<ProtoSettings>(DEFAULT_PROTO_SETTINGS);
+  const [protoSettings, setProtoSettings] = useState<ProtoSettings>(loadProtoSettings);
+  useEffect(() => saveNames(protoSettings), [protoSettings.recipientName, protoSettings.senderName]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Contrapartes das operações por aproximação (nomes editáveis em Mais)
+  const recipient = { ...NFC_RECIPIENT, name: nameOr(protoSettings.recipientName, NFC_RECIPIENT.name) };
+  const sender = { ...NFC_SENDER, name: nameOr(protoSettings.senderName, NFC_SENDER.name) };
 
   const notify = useCallback((msg: string) => setToast(msg), []);
   useEffect(() => {
@@ -80,8 +84,8 @@ export function App() {
     const id = transactionId();
     const meta = {
       pay: { title: NFC_MERCHANT.name, kind: "Pagamento", label: "Débito por aproximação" },
-      transfer: { title: NFC_RECIPIENT.name, kind: "Transferência enviada", label: "Pix por aproximação" },
-      receive: { title: NFC_SENDER.name, kind: "Transferência recebida", label: "Pix por aproximação" },
+      transfer: { title: recipient.name, kind: "Transferência enviada", label: "Pix por aproximação" },
+      receive: { title: sender.name, kind: "Transferência recebida", label: "Pix por aproximação" },
     }[kind];
     setBalance((b) => Math.round((b + signed) * 100) / 100);
     setTransactions((list) => [{ id, title: meta.title, kind: meta.kind, method: "nfc", methodLabel: meta.label, amount: signed, date: "Hoje" }, ...list]);
@@ -92,9 +96,9 @@ export function App() {
           { title: "Destino", lines: [`Nome: ${NFC_MERCHANT.legal}`, `CNPJ: ${NFC_MERCHANT.document}`, "Maquininha Point"] }, { title: "Identificação", lines: ["ID da transação", id] }] },
       transfer: { kicker: "Comprovante de transferência", status: "Concluída", title: "Transferência por aproximação", date: `Realizada em ${receiptDate()}`, amount,
         sections: [{ title: "Forma de pagamento", lines: ["Saldo em conta", "Pix por aproximação"] }, { title: "Origem", lines: me },
-          { title: "Destino", lines: [`Nome: ${NFC_RECIPIENT.name}`, `CPF: ${NFC_RECIPIENT.document}`, "Instituição: Mercado Pago"] }, { title: "Identificação", lines: ["ID da transação", id] }] },
+          { title: "Destino", lines: [`Nome: ${recipient.name}`, `CPF: ${recipient.document}`, "Instituição: Mercado Pago"] }, { title: "Identificação", lines: ["ID da transação", id] }] },
       receive: { kicker: "Comprovante de recebimento", status: "Recebido", title: "Recebimento por aproximação", date: `Recebido em ${receiptDate()}`, amount,
-        sections: [{ title: "Forma de recebimento", lines: ["Pix por aproximação"] }, { title: "Origem", lines: [`Nome: ${NFC_SENDER.name}`, `CPF: ${NFC_SENDER.document}`, "Instituição: Mercado Pago"] },
+        sections: [{ title: "Forma de recebimento", lines: ["Pix por aproximação"] }, { title: "Origem", lines: [`Nome: ${sender.name}`, `CPF: ${sender.document}`, "Instituição: Mercado Pago"] },
           { title: "Destino", lines: me }, { title: "Identificação", lines: ["ID da transação", id] }] },
     };
     setNfc({ screen: "receipt", data: data[kind] });
@@ -116,7 +120,7 @@ export function App() {
       onDetected={() => settings.doubleConfirm ? setNfc({ screen: "transfer-confirm", amount }) : completeNfc("transfer", amount)} onBack={() => setNfc({ screen: "transfer-amount" })} />;
   } else if (nfc?.screen === "transfer-confirm") {
     const amount = nfc.amount;
-    screen = <StandBy state="confirm" icon="send" action="Transferir" processingLabel="Transferindo" amount={amount} preposition="Para" counterpart={NFC_RECIPIENT.name}
+    screen = <StandBy state="confirm" icon="send" action="Transferir" processingLabel="Transferindo" amount={amount} preposition="Para" counterpart={recipient.name}
       onConfirm={() => completeNfc("transfer", amount)} onBack={() => setNfc({ screen: "transfer-standby", amount })} />;
   } else if (nfc?.screen === "receive") {
     screen = <StandBy state="action" icon="receive" title="Aproxime para Receber" text="Peça para a outra pessoa encostar o celular dela no seu."
@@ -125,7 +129,7 @@ export function App() {
       onBack={() => setNfc(nfc.from === "amount" ? { screen: "transfer-amount" } : null)} />;
   } else if (nfc?.screen === "receive-confirm") {
     const amount = nfc.amount;
-    screen = <StandBy state="confirm" icon="receive" action="Receber" processingLabel="Recebendo" amount={amount} preposition="De" counterpart={NFC_SENDER.name}
+    screen = <StandBy state="confirm" icon="receive" action="Receber" processingLabel="Recebendo" amount={amount} preposition="De" counterpart={sender.name}
       onConfirm={() => completeNfc("receive", amount)} onBack={() => setNfc({ screen: "receive", from: "approach" })} />;
   } else if (nfc?.screen === "receipt") {
     screen = <Receipt data={nfc.data} notify={notify} onClose={() => goTab("conta")} />;
