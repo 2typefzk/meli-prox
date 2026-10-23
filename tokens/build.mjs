@@ -250,7 +250,8 @@ for (const [k, v] of Object.entries(size)) L.push(`  --size-${cssName(k)}: ${v}p
 L.push(`  --font-app: ${fonts.app};`, `  --font-web: ${fonts.web};`);
 for (const [k, [fam, fs, fw, lh, ls]] of Object.entries(textStyles)) {
   const n = cssName(k);
-  L.push(`  --type-${n}: ${fw} ${fs}px/${lh}px var(--font-${fam});`, `  --type-${n}-tracking: ${ls}px;`);
+  // --font-scale (padrão 1) permite reduzir/ampliar toda a tipografia de uma superfície sem mexer nos tokens
+  L.push(`  --type-${n}: ${fw} calc(${fs}px * var(--font-scale, 1))/calc(${lh}px * var(--font-scale, 1)) var(--font-${fam});`, `  --type-${n}-tracking: ${ls}px;`);
 }
 for (const [k, list] of Object.entries(shadows)) L.push(`  --shadow-${cssName(k)}: ${shadowCss(list)};`);
 for (const [k, v] of Object.entries(gradients)) L.push(`  --gradient-${k}: ${v};`);

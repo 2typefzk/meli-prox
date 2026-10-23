@@ -1,5 +1,8 @@
 /* Protótipo — layout das telas da página "Screens" (Figma 19:2). Somente tokens do Meli DS. */
 
+/* Tipografia do protótipo 10% menor que a escala do DS (ver --type-* em tokens.css) */
+:root { --font-scale: .9; }
+
 *, *::before, *::after { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
 body { background: var(--color-bg-canvas); font-family: var(--font-app); -webkit-font-smoothing: antialiased; }
@@ -371,7 +374,7 @@ button { font-family: inherit; }
    (margens automáticas centralizam palco + texto + indicadores entre as abas e a navegação) */
 .approach__viewport { margin-top: auto; }
 .approach__dots { margin-bottom: auto; }
-.approach .anima { height: 260px; margin: var(--space-6) 0; }
+.approach .anima { height: 260px; margin: var(--space-2) 0; }
 /* reserva o espaço do FAB do Pix, que sobe 40px acima da navegação */
 .approach__content { padding-bottom: var(--space-10); }
 
@@ -416,7 +419,7 @@ button { font-family: inherit; }
 
 .nearby__hint {
   position: absolute; left: 0; right: 0; bottom: var(--space-2); display: flex; justify-content: center; align-items: center; gap: 4px;
-  font-size: 12px; color: #8c8da9; pointer-events: none; animation: fade .6s .8s ease-out both;
+  font-size: calc(12px * var(--font-scale, 1)); color: #8c8da9; pointer-events: none; animation: fade .6s .8s ease-out both;
 }
 .nearby__hint svg { animation: nearby-nudge 1.6s ease-in-out infinite; }
 @keyframes nearby-nudge { 50% { transform: translateY(3px); } }
@@ -432,7 +435,7 @@ button { font-family: inherit; }
   position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px; border-radius: 50%;
   background: #434CE5; box-shadow: 0 0 0 8px rgba(67, 76, 229, .3);
 }
-.nearby__search-label { position: absolute; left: 0; right: 0; top: calc(50% + 140px); text-align: center; color: #8c8da9; font-size: 14px; }
+.nearby__search-label { position: absolute; left: 0; right: 0; top: calc(50% + 140px); text-align: center; color: #8c8da9; font-size: calc(14px * var(--font-scale, 1)); }
 @keyframes nearby-ring { from { transform: scale(.1); opacity: 1; } to { transform: scale(1); opacity: 0; } }
 
 .nearby__footer { display: flex; justify-content: center; padding: var(--space-4) 0 var(--space-8); }
@@ -444,7 +447,7 @@ button { font-family: inherit; }
 .nearby-sheet .sheet__handle { margin-bottom: 0; }
 .nearby-sheet__head { display: flex; align-items: center; gap: var(--space-3); }
 .nearby-sheet__avatar { width: 56px; height: 56px; flex: none; border-radius: 50%; object-fit: cover; display: grid; place-items: center; border: 1px solid var(--color-border-strong); }
-.nearby-sheet__avatar--initials { background: #f5f5f5; border-color: #e9eaeb; color: #717680; font-weight: 600; font-size: 18px; }
+.nearby-sheet__avatar--initials { background: #f5f5f5; border-color: #e9eaeb; color: #717680; font-weight: 600; font-size: calc(18px * var(--font-scale, 1)); }
 .nearby-sheet__avatar--anon { background: var(--color-bg-subtle); color: var(--color-text-tertiary); }
 .nearby-sheet__meta { display: flex; align-items: center; gap: 6px; margin-top: 2px; color: var(--color-text-secondary); }
 .nearby-sheet__pix { display: flex; flex-direction: column; gap: 6px; }
@@ -452,7 +455,7 @@ button { font-family: inherit; }
 .nearby-sheet__pix .m-field__input { text-overflow: ellipsis; }
 .nearby-sheet__actions { display: flex; gap: var(--space-3); }
 .nearby-sheet__section { margin-bottom: var(--space-2); }
-.nearby-sheet__thumb { display: grid; place-items: center; width: 100%; height: 100%; font-weight: 600; font-size: 13px; }
+.nearby-sheet__thumb { display: grid; place-items: center; width: 100%; height: 100%; font-weight: 600; font-size: calc(13px * var(--font-scale, 1)); }
 @media (prefers-reduced-motion: reduce) {
   .nearby__ring, .nearby__hint svg, .nearby__spin { animation: none !important; }
 }
@@ -460,7 +463,7 @@ button { font-family: inherit; }
 
 .nearby__visible {
   align-self: center; display: inline-flex; align-items: center; gap: 8px; margin-top: var(--space-2);
-  padding: 6px 12px; border-radius: var(--radius-full); background: rgba(23, 178, 106, .16); color: #d1fadf; font-size: 13px;
+  padding: 6px 12px; border-radius: var(--radius-full); background: rgba(23, 178, 106, .16); color: #d1fadf; font-size: calc(13px * var(--font-scale, 1));
   animation: fade .3s ease-out;
 }
 
@@ -482,7 +485,7 @@ button { font-family: inherit; }
 .settings__crumb-link { padding: 0; border: 0; background: none; font: inherit; font-weight: 600; color: var(--color-text-accent); cursor: pointer; }
 .settings__crumb-link:hover { text-decoration: underline; }
 .settings__head { display: flex; flex-direction: column; gap: var(--space-2); }
-.settings__title { margin: 0; font: 600 28px/34px var(--font-base); letter-spacing: -.01em; }
+.settings__title { margin: 0; font: 600 calc(28px * var(--font-scale, 1))/calc(34px * var(--font-scale, 1)) var(--font-base); letter-spacing: -.01em; }
 .settings__lead { margin: 0; font: var(--type-body-lg); font-family: var(--font-base); color: var(--color-text-primary); }
 
 
@@ -496,12 +499,12 @@ button { font-family: inherit; }
 .gate.is-leaving { opacity: 0; }
 .gate__form { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); width: min(280px, 100% - 32px); }
 .gate__icon { color: rgba(255,255,255,.5); }
-.gate__label { font-size: 14px; color: rgba(255,255,255,.6); }
+.gate__label { font-size: calc(14px * var(--font-scale, 1)); color: rgba(255,255,255,.6); }
 .gate__field { display: flex; width: 100%; border: 1px solid rgba(255,255,255,.2); border-radius: var(--radius-full); padding: 4px 4px 4px 18px; transition: border-color .2s; }
 .gate__field:focus-within { border-color: rgba(255,255,255,.6); }
 .gate__field.is-error { border-color: #F04438; animation: gate-shake .4s; }
-.gate__field input { flex: 1; min-width: 0; border: 0; background: none; color: #fff; font: 500 16px/40px var(--font-base); letter-spacing: .2em; outline: none; }
+.gate__field input { flex: 1; min-width: 0; border: 0; background: none; color: #fff; font: 500 calc(16px * var(--font-scale, 1))/40px var(--font-base); letter-spacing: .2em; outline: none; }
 .gate__field button { flex: none; width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #000; cursor: pointer; transition: opacity .2s; }
 .gate__field button:disabled { opacity: .3; cursor: default; }
-.gate__msg { margin: 0; font-size: 13px; color: #F97066; }
+.gate__msg { margin: 0; font-size: calc(13px * var(--font-scale, 1)); color: #F97066; }
 @keyframes gate-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }

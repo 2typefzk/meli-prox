@@ -5,7 +5,7 @@ import { RECIPIENT, formatBRL, type KeyType } from "../data";
 import { AmountEntry } from "./AmountEntry";
 
 const BankAvatar = ({ size = 40 }: { size?: number }) => (
-  <span className="flow-bank" style={{ width: size, height: size, fontSize: size * 0.3 }} aria-hidden>itaú</span>
+  <span className="flow-bank" style={{ width: size, height: size, fontSize: `calc(${size * 0.3}px * var(--font-scale, 1))` }} aria-hidden>itaú</span>
 );
 export const Back = ({ onClick }: { onClick: () => void }) => (
   <IconButton icon={<ChevronLeft size={22} />} aria-label="Voltar" onClick={onClick} />
