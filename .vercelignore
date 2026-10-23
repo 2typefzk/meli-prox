@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+dist/
+.vercel/
+.claude/
+storybook/storybook-static/
+storybook/prototype-dist/
+# capturas de referência do app real (podem conter dados da conta) — ficam só na máquina
+meli_ds_*.jpeg
+storybook/node_modules/
+.env*.local

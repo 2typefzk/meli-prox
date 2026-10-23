@@ -7,3 +7,5 @@ storybook/storybook-static/
 storybook/prototype-dist/
 # capturas de referência do app real (podem conter dados da conta) — ficam só na máquina
 meli_ds_*.jpeg
+.vercel
+.env*
