@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Vector">
+<use xlink:href="#stroke0_0_4" stroke="#FFE600"/>
+<use xlink:href="#stroke0_0_4" stroke="white" stroke-opacity="0.85"/>
+</g>
+<defs>
+<path id="stroke0_0_4" d="M2 26H50M26 50L50 26L26 2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</defs>
+</svg>

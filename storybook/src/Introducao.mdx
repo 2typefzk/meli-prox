@@ -1,0 +1,26 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Introdução" />
+
+# Meli DS
+
+Design system obtido por **engenharia reversa** de duas fontes:
+
+- **App Mercado Pago (Android)**: 9 screenshots (Conta, Pix, Cartões, Mais, fluxo de transferência, análise de crédito).
+- **mercadolivre.com.br**: CSS de produção da home (Andes UI). A página de produto (PDP) exige verificação de conta para acesso automatizado, então a parte de PDP segue o padrão Andes documentado no `DESIGN.md`.
+
+## Como usar
+
+- Troque **Tema** na toolbar: `Mercado Pago · Light`, `Mercado Pago · Dark`, `Mercado Livre · Web`.
+- Todos os componentes consomem apenas variáveis CSS geradas por `tokens/build.mjs`; as mesmas variáveis existem no Figma (`tokens/figma-variables.json`).
+
+## Personalidade
+
+**Fintech amigável, clara e confiante.** O app usa muito espaço em branco, índigo como cor de ação, amarelo como assinatura de marca (header, IA) e superfícies com tint índigo suave em vez de sombras. O resultado é plano e leve, com cantos generosos. O marketplace web é mais denso e utilitário: cinza claro de fundo, cards brancos com sombra sutil e azul `#3483FA` nas ações.
+
+| Princípio | Na prática |
+|---|---|
+| Uma ação primária por tela | CTA índigo de largura total ancorado no rodapé |
+| Tint antes de sombra | Botões secundários, tiles e banners usam `surface/tint` |
+| Marca no topo, ação na base | Amarelo no header, índigo nos CTAs, teal no Pix |
+| Leitura em dois níveis | Label secundário (14/400) acima do valor (18–20/600) |

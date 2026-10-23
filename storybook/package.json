@@ -1,0 +1,31 @@
+{
+  "name": "meli-ds-storybook",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "tokens": "node ../tokens/build.mjs",
+    "storybook": "npm run tokens && storybook dev -p 6006",
+    "build-storybook": "npm run tokens && storybook build -o storybook-static",
+    "prototype": "npm run tokens && vite --config prototype/vite.config.ts",
+    "build-prototype": "npm run tokens && vite build --config prototype/vite.config.ts"
+  },
+  "dependencies": {
+    "lucide-react": "0.460.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "8.6.14",
+    "@storybook/addon-essentials": "8.6.14",
+    "@storybook/blocks": "8.6.14",
+    "@storybook/react": "8.6.14",
+    "@storybook/react-vite": "8.6.14",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "storybook": "8.6.14",
+    "typescript": "5.6.3",
+    "vite": "5.4.11"
+  }
+}

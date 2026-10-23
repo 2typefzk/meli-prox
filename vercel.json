@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "cd storybook && npm ci",
+  "buildCommand": "cd storybook && npm run build-prototype && npm run build-storybook && rm -rf ../dist && mkdir -p ../dist && cp -R prototype-dist/. ../dist/ && cp -R storybook-static ../dist/storybook",
+  "outputDirectory": "dist",
+  "headers": [
+    { "source": "/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+  ]
+}
