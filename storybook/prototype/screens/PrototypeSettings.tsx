@@ -2,9 +2,9 @@ import { Switch, TextField } from "../../src/components";
 import { NFC_RECIPIENT, NFC_SENDER } from "../data";
 
 export interface ProtoSettings {
-  /** Bloco "Aproxime" (banners) na Home — desligado por padrão */
+  /** Bloco "Aproximar" (banners) na Home — ligado por padrão */
   approachBlock: boolean;
-  /** Funcionalidade "Perto de mim" (radar no Aproxime, bloco em Configurações e card na Home) — desligada por padrão */
+  /** Funcionalidade "Perto de mim" (radar no Aproxime, bloco em Configurações e card na Home) — ligada por padrão */
   nearby: boolean;
   /** Quem recebe quando eu transfiro por aproximação */
   recipientName: string;
@@ -12,7 +12,7 @@ export interface ProtoSettings {
   senderName: string;
 }
 export const DEFAULT_PROTO_SETTINGS: ProtoSettings = {
-  approachBlock: false, nearby: false, recipientName: NFC_RECIPIENT.name, senderName: NFC_SENDER.name,
+  approachBlock: true, nearby: true, recipientName: NFC_RECIPIENT.name, senderName: NFC_SENDER.name,
 };
 
 // Só os nomes ficam salvos no aparelho (localStorage); as chaves voltam ao padrão a cada visita
@@ -42,11 +42,11 @@ export function PrototypeSettings({ settings, onChange }: { settings: ProtoSetti
         </div>
         <ul className="m-list proto-settings">
           <li>
-            <Switch label="Bloco “Aproxime” na Home" description="Mostra os atalhos Pagar e Transferir ou receber depois de Ferramentas."
+            <Switch label="Bloco “Aproximar” na Home" description="Mostra os atalhos Pagar e Transferir ou receber depois de Ferramentas."
               checked={settings.approachBlock} onChange={(approachBlock) => onChange({ ...settings, approachBlock })} />
           </li>
           <li>
-            <Switch label="Perto de mim" description="Mostra o ícone de radar no Aproxime, o bloco em Configurações e o card no bloco “Aproxime” da Home."
+            <Switch label="Perto de mim" description="Mostra o ícone de radar no Aproxime, o bloco em Configurações e o card no bloco “Aproximar” da Home."
               checked={settings.nearby} onChange={(nearby) => onChange({ ...settings, nearby })} />
           </li>
         </ul>

@@ -36,9 +36,9 @@ export interface HomeProps {
   onToggleBalance: () => void;
   onOpenApproach: (mode?: ApproachMode) => void;
   notify: (msg: string) => void;
-  /** Configuração do protótipo: exibe o bloco "Aproxime" */
+  /** Configuração do protótipo: exibe o bloco "Aproximar" */
   showApproachBlock?: boolean;
-  /** Card "Perto de mim" no bloco Aproxime (funcionalidade ligada em Mais) */
+  /** Card "Perto de mim" no bloco Aproximar (funcionalidade ligada em Mais) */
   onOpenNearby?: () => void;
 }
 
@@ -147,9 +147,9 @@ export function Home({ balance, transactions, hideBalance, onToggleBalance, onOp
           </div>
         </section>
 
-        {/* Aproxime: banners que abrem a tela Aproxime já na aba certa (liga em Mais › Configurações do protótipo) */}
+        {/* Aproximar: banners que abrem a tela Aproxime já na aba certa (liga em Mais › Configurações do protótipo) */}
         {showApproachBlock && <section className="home-section home-section--bleed">
-          <SectionHeader title="Aproxime" />
+          <SectionHeader title="Aproximar" />
           <div className="home-approach" ref={approachRef}>
             {([
               { mode: "pay", title: "Pagar", text: "Débito ou Pix na maquininha", Art: PayIllustration },
