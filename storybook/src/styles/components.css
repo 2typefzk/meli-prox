@@ -454,3 +454,79 @@
 .settings-live__dot { display: inline-block; width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--color-feedback-positive-fill); box-shadow: 0 0 0 0 rgba(23,178,106,.5); animation: live-pulse 1.6s ease-out infinite; }
 @keyframes live-pulse { to { box-shadow: 0 0 0 8px rgba(23,178,106,0); } }
 @media (prefers-reduced-motion: reduce) { .settings-live__dot { animation: none; } .settings-row__panel { transition: none; } }
+
+
+/* ============================================================ ContactlessIllustration / ContactlessMark
+ * Estado da aproximação (NFC · Transferir · Receber) com variações de sucesso. */
+.approach-mark { stroke-width: 2.5; }
+.approach-mark__ring { fill: none; stroke: var(--color-text-on-accent); }
+.approach-mark__wave { fill: none; stroke: var(--color-text-on-accent); stroke-linecap: round; animation: wave 1.6s ease-in-out infinite; }
+@keyframes wave { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+/* Figma 27:1648 — anel 128 (stroke 6) sobre fundo navy; Sucesso: 152, cor sólida na borda e fundo na mesma cor escurecida (+#1E1E24 20%) */
+.contactless {
+  --c: var(--color-text-on-accent);
+  position: relative; width: 140px; height: 140px; flex: none; border-radius: 50%;
+  display: grid; place-items: center; background: var(--meli-card-navy);
+  transition: width .45s ease-out, height .45s ease-out, background-color .45s ease-out;
+}
+.contactless--nfc { width: 144px; height: 144px; }
+.contactless--send { --c: var(--color-brand-yellow); }
+.contactless--receive { --c: var(--color-feedback-info-fill); }
+.contactless__disc {
+  position: relative; width: 134px; height: 134px; border-radius: 50%; overflow: hidden;
+  border: 6px solid var(--c); background: transparent; display: grid; place-items: center;
+  transition: border-color .45s ease-out, background-color .45s ease-out;
+}
+/* Sucesso: cresce, borda e fundo na cor da ação (Receive e NFC transicionam para verde) */
+.contactless--success { width: 152px; height: 152px; background: var(--c); }
+.contactless--receive.contactless--success, .contactless--nfc.contactless--success { --c: var(--color-brand-pix); }
+.contactless--success .contactless__disc { background: color-mix(in srgb, var(--c) 80%, #1E1E24); }
+
+.contactless__arrow, .contactless__waves { position: absolute; left: 50%; top: 50%; }
+.contactless__waves { margin: -29px 0 0 -20px; transition: opacity .25s ease-out; }
+.contactless--success .contactless__waves { opacity: 0; }
+.contactless__arrow {
+  margin: -26px 0 0 -26px;
+  --from: 64px; --to: -64px; --rot: -90deg; /* Send: de baixo para cima */
+  transform: rotate(var(--rot));
+  animation: contactless-loop 1.92s ease-out infinite;
+}
+.contactless--receive .contactless__arrow { --from: -64px; --to: 64px; --rot: 90deg; } /* Receive: de cima para baixo */
+/* 0,46 s entrando (fade-in) → 1 s parada no centro → 0,46 s saindo (fade-out) — deslize 30% mais rápido */
+@keyframes contactless-loop {
+  0% { transform: translateY(var(--from)) rotate(var(--rot)); opacity: 0; }
+  23.96% { transform: translateY(0) rotate(var(--rot)); opacity: 1; }
+  76.04% { transform: translateY(0) rotate(var(--rot)); opacity: 1; }
+  100% { transform: translateY(var(--to)) rotate(var(--rot)); opacity: 0; }
+}
+/* Sucesso: a seta sai de vez e não volta (durante o processamento ela segue em loop) */
+.contactless--success .contactless__arrow { animation: contactless-exit .4s ease-out forwards; }
+@keyframes contactless-exit {
+  from { transform: translateY(0) rotate(var(--rot)); opacity: 1; }
+  to { transform: translateY(var(--to)) rotate(var(--rot)); opacity: 0; }
+}
+.contactless__success { position: relative; display: grid; place-items: center; animation: contactless-pop .35s .15s ease-out both; }
+.contactless__emoji { font-size: 48px; line-height: 1; }
+@keyframes contactless-pop { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .contactless, .contactless__disc { transition: none; }
+  .contactless__arrow { animation: none; }
+  .contactless--success .contactless__arrow { animation: none; opacity: 0; }
+  .contactless__success { animation-duration: .01s; animation-delay: 0s; }
+}
+
+/* ============================================================ NearbyDrawer (sobre BottomSheet) */
+.nearby-sheet { display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-3) var(--space-4) var(--space-6); max-height: 88%; overflow-y: auto; color: var(--color-text-primary); }
+.nearby-sheet .sheet__handle { margin-bottom: 0; }
+.nearby-sheet__head { display: flex; align-items: center; gap: var(--space-3); }
+.nearby-sheet__avatar { width: 56px; height: 56px; flex: none; border-radius: 50%; object-fit: cover; display: grid; place-items: center; border: 1px solid var(--color-border-strong); }
+.nearby-sheet__avatar--initials { background: #f5f5f5; border-color: #e9eaeb; color: #717680; font-weight: 600; font-size: calc(18px * var(--font-scale, 1)); }
+.nearby-sheet__avatar--anon { background: var(--color-bg-subtle); color: var(--color-text-tertiary); }
+.nearby-sheet__meta { display: flex; align-items: center; gap: 6px; margin-top: 2px; color: var(--color-text-secondary); }
+.nearby-sheet__pix { display: flex; flex-direction: column; gap: 6px; }
+.nearby-sheet__pix .m-field__box { padding-right: 4px; }
+.nearby-sheet__pix .m-field__input { text-overflow: ellipsis; }
+.nearby-sheet__actions { display: flex; gap: var(--space-3); }
+.nearby-sheet__section { margin-bottom: var(--space-2); }
+.nearby-sheet__thumb { display: grid; place-items: center; width: 100%; height: 100%; font-weight: 600; font-size: calc(13px * var(--font-scale, 1)); }
+.nearby-sheet__info { flex: 1; min-width: 0; }

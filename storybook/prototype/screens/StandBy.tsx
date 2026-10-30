@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button, IconButton } from "../../src/components";
 import { formatBRL } from "../data";
-import { ContactlessIllustration, type ContactlessKind, type ContactlessPhase } from "./Contactless";
+import { ContactlessIllustration, type ContactlessKind, type ContactlessPhase } from "../../src/components";
 
 /** Ação: aguardando a aproximação. */
 interface ActionProps {

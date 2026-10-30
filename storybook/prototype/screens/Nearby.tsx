@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
-import { ArrowLeft, ArrowRight, ChevronDown, Copy, Lock, Phone, RefreshCw, Settings, User, UserPlus } from "lucide-react";
-import { BottomSheet, Button, IconButton, LiveDot, NearbyAvatar, TransactionItem } from "../../src/components";
+import { ArrowLeft, ChevronDown, RefreshCw, Settings } from "lucide-react";
+import { IconButton, LiveDot, NearbyAvatar, NearbyDrawer } from "../../src/components";
 import { AREA, NEARBY, type KnownUser, type NearbyUser } from "../nearby-data";
-import { formatBRL } from "../data";
 import { formatCountdown, useSecondsLeft } from "../hooks";
 import type { AppSettings } from "./Settings";
 
@@ -54,7 +53,6 @@ function useTween() {
   }, []);
 }
 
-const initialsOf = (name: string) => name.split(" ").map((p) => p[0]).slice(0, 2).join("");
 
 export interface NearbyProps {
   settings: AppSettings;
@@ -183,74 +181,11 @@ export function Nearby({ settings, onOpenSettings, onBack, notify, onTransfer, o
           aria-label="Buscar novamente" onClick={refresh} disabled={phase === "searching"} />
       </div>
 
-      {selected && <NearbyDrawer user={selected} onClose={() => setSelected(null)} notify={notify}
-        onTransfer={(u) => { setSelected(null); onTransfer(u); }} onReceive={(u) => { setSelected(null); onReceive(u); }} />}
+      {selected && <NearbyDrawer person={selected} onClose={() => setSelected(null)}
+        onCopyPixKey={async (key) => { try { await navigator.clipboard.writeText(key); } catch { /* sem permissão: o aviso basta */ } notify("Chave Pix copiada"); }}
+        onTransfer={() => { const u = selected as KnownUser; setSelected(null); onTransfer(u); }}
+        onReceive={() => { const u = selected as KnownUser; setSelected(null); onReceive(u); }}
+        onAddContact={() => selected.kind === "open" && notify(`Convite enviado para ${selected.initials}`)} />}
     </div>
-  );
-}
-
-/** Bottom drawer com as informações do usuário tocado (3 casos). */
-function NearbyDrawer({ user, onClose, notify, onTransfer, onReceive }: {
-  user: NearbyUser; onClose: () => void; notify: (m: string) => void; onTransfer: (u: KnownUser) => void; onReceive: (u: KnownUser) => void;
-}) {
-  const copy = async (text: string) => {
-    try { await navigator.clipboard.writeText(text); } catch { /* sem permissão: o aviso basta no protótipo */ }
-    notify("Chave Pix copiada");
-  };
-  return (
-    <BottomSheet className="nearby-sheet" aria-label="Detalhes do usuário" onClose={onClose}>
-      {(leave) => (<>
-        {user.kind === "contact" && (
-          <>
-            <div className="nearby-sheet__head">
-              <img className="nearby-sheet__avatar" src={user.photo} alt="" />
-              <div className="home-grow">
-                <h2 className="t-h3">{user.name}</h2>
-                <p className="nearby-sheet__meta"><Phone size={16} /> {user.phone}</p>
-              </div>
-            </div>
-            <label className="nearby-sheet__pix">
-              <span className="t-caption t-secondary">Chave Pix</span>
-              <span className="m-field__box">
-                <input className="m-field__input" readOnly value={user.pixKey} aria-label="Chave Pix" />
-                <IconButton icon={<Copy size={18} />} aria-label="Copiar chave Pix" onClick={() => copy(user.pixKey)} />
-              </span>
-            </label>
-            <div className="nearby-sheet__actions">
-              <Button fullWidth variant="secondary" onClick={() => onReceive(user)}>Receber</Button>
-              <Button fullWidth trailingIcon={<ArrowRight size={18} />} onClick={() => onTransfer(user)}>Transferir</Button>
-            </div>
-            <div>
-              <h3 className="t-h5 nearby-sheet__section">Últimas transações</h3>
-              {user.history.map((t, i) => (
-                <TransactionItem key={i} thumb={<span className="nearby-sheet__thumb">{initialsOf(user.name)}</span>} title={t.title} kind={t.kind}
-                  method={t.amount < 0 ? "Enviado" : "Recebido"} amount={`${t.amount < 0 ? "-" : "+"} ${formatBRL(Math.abs(t.amount))}`} date={t.date} />
-              ))}
-            </div>
-          </>
-        )}
-        {user.kind === "open" && (
-          <>
-            <div className="nearby-sheet__head">
-              <span className="nearby-sheet__avatar nearby-sheet__avatar--initials">{user.initials}</span>
-              <div className="home-grow">
-                <h2 className="t-h3">{user.initials}</h2>
-                <p className="nearby-sheet__meta"><Phone size={16} /> {user.phonePrefix}</p>
-              </div>
-            </div>
-            <Button fullWidth icon={<UserPlus size={18} />} onClick={() => { notify(`Convite enviado para ${user.initials}`); leave(); }}>Adicionar aos contatos</Button>
-          </>
-        )}
-        {user.kind === "anon" && (
-          <div className="nearby-sheet__head">
-            <span className="nearby-sheet__avatar nearby-sheet__avatar--anon"><User size={28} /></span>
-            <div className="home-grow">
-              <h2 className="t-h3">Usuário Desconhecido</h2>
-              <p className="nearby-sheet__meta"><Lock size={16} /> Não é possível interagir</p>
-            </div>
-          </div>
-        )}
-      </>)}
-    </BottomSheet>
   );
 }

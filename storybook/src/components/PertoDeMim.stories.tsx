@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Copy, Eye, Gauge, Phone, Radar, ShieldCheck, Sparkles, UserCheck, Vibrate, X } from "lucide-react";
+import { Eye, Gauge, Radar, ShieldCheck, Sparkles, UserCheck, Vibrate, X } from "lucide-react";
 import { NearbyAvatar } from "./NearbyAvatar";
+import { NearbyDrawer, type NearbyPerson } from "./NearbyDrawer";
+import { ContactlessIllustration, type ContactlessKind, type ContactlessPhase } from "./ContactlessIllustration";
 import { BottomSheet } from "./BottomSheet";
 import { SettingsCard, SettingsRow, ChoiceChips, RadioList, Toggle, LiveDot } from "./SettingsList";
 import { Button } from "./Button";
@@ -10,7 +12,8 @@ import man from "../../prototype/assets/nearby-contact-man.jpg";
 import woman from "../../prototype/assets/nearby-contact-woman.jpg";
 import purple from "../../prototype/assets/nearby-contact-purple.jpg";
 
-const meta: Meta = { title: "Components/Aproxime e Perto de mim", tags: ["autodocs"] };
+const meta: Meta = { title: "Components/Aproxime e Perto de mim",
+  parameters: { docs: { description: { component: "Componentes criados para o Aproxime (pagar, transferir e receber por aproximação) e para o Perto de mim: ilustração de aproximação, avatares e drawer de quem está por perto, bottom sheet com arrastar para fechar e a lista de configurações." } } }, tags: ["autodocs"] };
 export default meta;
 type S = StoryObj;
 
@@ -80,31 +83,53 @@ export const BottomSheetAnimado: S = {
   },
 };
 
-export const DrawerContato: S = {
-  name: "Drawer do Perto de mim · contato",
+const PERSONS: Record<string, NearbyPerson> = {
+  contato: { kind: "contact", name: "Rafael Monteiro", photo: man, phone: "(11) 98765-4321", pixKey: "rafael.monteiro@email.com",
+    history: [{ title: "Rafael Monteiro", kind: "Pix enviado", amount: -42.5, date: "18/out" }, { title: "Rafael Monteiro", kind: "Pix recebido", amount: 120, date: "02/out" }] },
+  aberto: { kind: "open", initials: "LS", phonePrefix: "(15) 997..." },
+  anonimo: { kind: "anon" },
+};
+const drawerStory = (key: keyof typeof PERSONS, name: string): S => ({
+  name,
+  render: () => {
+    const [open, setOpen] = useState(true);
+    return (
+      <Phone375>
+        <div style={{ padding: 24 }}><Button size="md" onClick={() => setOpen(true)}>Abrir drawer</Button></div>
+        {open && <NearbyDrawer person={PERSONS[key]} onClose={() => setOpen(false)} />}
+      </Phone375>
+    );
+  },
+});
+export const DrawerContato = drawerStory("contato", "NearbyDrawer · Contato");
+export const DrawerAberto = drawerStory("aberto", "NearbyDrawer · Usuário aberto");
+export const DrawerAnonimo = drawerStory("anonimo", "NearbyDrawer · Anônimo");
+
+/** Fundo navy do Stand by, onde a ilustração vive */
+const Standby = ({ children }: { children: React.ReactNode }) => (
+  <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 32, padding: 32, borderRadius: 16, background: "radial-gradient(120% 70% at 50% 42%, #22324F 0%, var(--meli-card-navy) 45%, #0E1626 100%)" }}>
+    {children}
+  </div>
+);
+export const ContactlessEstados: S = {
+  name: "ContactlessIllustration · estados",
+  parameters: { docs: { description: { story: "NFC (pagar) · Send (transferir, amarelo) · Receive (receber, azul). Aguardando: seta/ondas em loop. Sucesso: Send fica amarelo com 💸; Receive e NFC ficam verdes (🤑 / check)." } } },
   render: () => (
-    <Phone375>
-      <BottomSheet aria-label="Detalhes do usuário" onClose={() => {}}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "0 16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <img src={man} alt="" width={56} height={56} style={{ borderRadius: "50%" }} />
-            <div>
-              <div className="t-h3">Rafael Monteiro</div>
-              <div className="t-body t-secondary" style={{ display: "flex", gap: 6, alignItems: "center" }}><Phone size={16} /> (11) 98765-4321</div>
-            </div>
-          </div>
-          <span className="m-field__box" style={{ paddingRight: 4 }}>
-            <input className="m-field__input" readOnly value="rafael.monteiro@email.com" aria-label="Chave Pix" />
-            <IconButton icon={<Copy size={18} />} aria-label="Copiar chave Pix" />
-          </span>
-          <div style={{ display: "flex", gap: 12 }}>
-            <Button fullWidth variant="secondary">Receber</Button>
-            <Button fullWidth>Transferir</Button>
-          </div>
-        </div>
-      </BottomSheet>
-    </Phone375>
+    <Standby>
+      {(["nfc", "send", "receive"] as ContactlessKind[]).flatMap((kind) => (["waiting", "success"] as ContactlessPhase[]).map((phase) => (
+        <figure key={kind + phase} style={{ margin: 0, display: "grid", justifyItems: "center", gap: 12, color: "#fff", font: "500 12px var(--font-base)" }}>
+          <ContactlessIllustration kind={kind} phase={phase} />
+          <figcaption>{kind} · {phase === "waiting" ? "aguardando" : "sucesso"}</figcaption>
+        </figure>
+      )))}
+    </Standby>
   ),
+};
+export const ContactlessInterativo: StoryObj<{ kind: ContactlessKind; phase: ContactlessPhase }> = {
+  name: "ContactlessIllustration · interativo",
+  argTypes: { kind: { control: "inline-radio", options: ["nfc", "send", "receive"] }, phase: { control: "inline-radio", options: ["waiting", "processing", "success"] } },
+  args: { kind: "send", phase: "waiting" },
+  render: (args) => <Standby><ContactlessIllustration kind={args.kind} phase={args.phase} /></Standby>,
 };
 
 export const ConfiguracoesCard: S = {

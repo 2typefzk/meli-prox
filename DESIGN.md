@@ -1,5 +1,7 @@
 # Meli DS — Design System (engenharia reversa)
 
+**Versão 1.1.0** · Storybook: [meli-prox.vercel.app/storybook](https://meli-prox.vercel.app/storybook/) · histórico na [seção 9](#9-histórico-de-versões)
+
 > **Fontes analisadas**
 > - **Ref 1:** 9 screenshots do app Mercado Pago Android (`meli_ds_1…9.jpeg`), capturadas em ~2× (738 px ≈ 360 dp). Cores amostradas por pixel e medidas convertidas para dp.
 > - **Ref 2:** `mercadolivre.com.br`, com CSS de produção da home (Andes UI, `navigation-desktop.css` e `home.desktop.css`) e estilos computados no navegador. A **PDP** (`/p/MLB52069531`) redireciona para verificação de conta quando acessada de forma automatizada, então os valores de PDP abaixo seguem os componentes Andes da home (botões, money-amount, poly-card), que são os mesmos usados na PDP.
@@ -160,6 +162,10 @@ A lista completa, com 39 tokens, está em `tokens/figma-variables.json` (coleç�
 | Caption / preço antigo | 12 / 15 · 400 · `rgba(0,0,0,.55)`, riscado |
 | Botão | 16 / 48 · 600 |
 
+### 2.3 Escala por superfície (`--font-scale`)
+
+Os estilos `--type-*` multiplicam tamanho e line-height por `var(--font-scale, 1)`. Sem a variável, a escala é a do DS (tabela 2.1). Uma superfície pode reduzir ou ampliar toda a tipografia de uma vez sem mexer nos tokens: o protótipo do Aproxime usa `:root { --font-scale: .9 }` (10% menor). Tamanhos fixos em componentes (badge, iniciais de avatar, chips) também usam `calc(Npx * var(--font-scale, 1))`.
+
 ---
 
 ## 3. Espaçamento e grid
@@ -253,7 +259,7 @@ O header web tem **100 px** 🟢 de altura e busca com **max-width 720 px** 🟢
 **Regra de uso:** em telas de fluxo, o CTA primário ocupa a largura total e fica ancorado no rodapé, com o secundário (tint) logo abaixo. Transição: `.18s ease-out` em background/color 🟢.
 
 ### 5.2 Icon Button
-40×40 (48 no lg), raio 12, fundo tint e ícone índigo 20–22 px. Variações: **com label** ("Chaves", padding 16), **surface** (branco + elevation/1), **brand** (branco 45% sobre amarelo). Badge de alerta: círculo 16 px `#E54302` com "!" ou contador.
+40×40 (48 no lg), raio 12, fundo tint e ícone índigo 20–22 px. Variações: **com label** ("Chaves", padding 16), **surface** (branco + elevation/1), **brand** (branco 70% sobre amarelo, como no app). Badge de alerta: círculo 16 px `#E54302` com "!" ou contador.
 
 ### 5.3 Inputs
 - **TextField outlined:** 48 dp de altura, padding 16, raio 12, borda 1px `#9A99A8`, placeholder `#757388` 16/400.
@@ -276,12 +282,13 @@ O header web tem **100 px** 🟢 de altura e busca com **max-width 720 px** 🟢
 
 ### 5.5 Navegação
 
-**Header do app (home):** fundo `#FFE600` arredondado embaixo (raio 20), avatar 40 branco com iniciais, saudação 16/600, selo meli+, 3 icon buttons à direita. Abaixo vêm tabs ("Saldo · Cofrinhos · Investimentos · Cripto"), com a ativa em um "folder tab" branco.
+**Header do app (home):** fundo `#FFE600` arredondado embaixo (raio 20), avatar 40 branco com o logo do Mercado Pago (iniciais como fallback), saudação 16/600, selo meli+, 3 icon buttons à direita. Abaixo vêm tabs ("Saldo · Cofrinhos · Investimentos · Cripto"), com a ativa em um "folder tab" branco.
 
 **Header de tela interna:** botão voltar 40×40 tint no topo esquerdo e H2 24/600 abaixo, alinhado à margem de 16.
 
-**Bottom navigation:** 5 itens (Conta · Cartões · **Pix** · Pagamentos · Mais), 64 dp, superfície branca com topo arredondado de 28 e ícones outline 24 + label 13/500.
-- **Ativo:** cor índigo e barra indicadora 32×4 acima do ícone.
+**Bottom navigation:** 5 itens (Conta · Cartões · **Pix** · Pagamentos · Mais), 64 dp, superfície branca com topo arredondado de 28 e ícones outline 24 + label 12/500 (um ponto abaixo de `label/md`).
+- **Espaçamento:** 5 entre ícone e label nas tabs comuns (a label fica alinhada à da tab Pix).
+- **Ativo:** cor índigo e barra indicadora 32×4 **colada na borda superior** da barra, com só os cantos de baixo arredondados.
 - **Pix:** FAB central de 56, elevado −28. Em repouso é teal `#43D5BE` com glow; quando ativo, branco com anel 3px índigo.
 
 **FAB Assistente (IA):** 56, esfera amarela em gradiente radial com glow e faísca índigo. Fica flutuando a 16 da borda direita, acima da nav.
@@ -294,7 +301,26 @@ O header web tem **100 px** 🟢 de altura e busca com **max-width 720 px** 🟢
 - **Transaction item:** thumb circular de 40 com borda; título 14/600, tipo e meio de pagamento 12; valor à direita 14/600 com data 12.
 - **Payment card:** razão 1.586, raio 20, gradiente navy, chip "Débito" `#0078BD` em pill, "VIRTUAL" com tracking de 0.2em.
 - **Page dots:** container pill branco; ponto de 8 px; ativo vira pílula de 24×8 escura.
-- **Bottom sheet:** superfície branca com raio superior 28 e handle 32×4.
+- **Bottom sheet:** superfície branca com raio superior 28 e handle 32×4, sobre scrim `rgba(18,17,24,.45)`.
+  - **Entrada:** sobe 100% → 0 em 0,38 s com ease-out (`cubic-bezier(.22,1,.36,1)`); o scrim entra com fade.
+  - **Saída:** ao tocar fora, no X ou ao arrastar, desce 50% da própria altura com fade-out em 0,28 s, também ease-out; só então o conteúdo é desmontado.
+  - **Arrastar para fechar:** o drawer acompanha o dedo e o scrim clareia junto. Passou de 96 px ou foi "jogado" (> 0,5 px/ms), fecha; antes disso, volta ao lugar. Com rolagem interna, o arrasto começa pela alça.
+
+### 5.7 Aproxime e Perto de mim
+
+| Componente | Spec |
+|---|---|
+| **ContactlessIllustration** | Disco 140 (NFC 144) com anel de 6 sobre navy; sucesso cresce para 152. **Pagar (NFC):** ondas brancas → verde Pix com check. **Transferir (Send):** amarelo; a seta sobe em loop (0,46 s entra · 1 s parada · 0,46 s sai, ciclo 1,92 s) e no sucesso vira 💸. **Receber (Receive):** azul `feedback/info` → verde Pix com 🤑. A seta continua em loop durante o processamento. |
+| **Stand by** (template) | Fundo radial navy, anéis que crescem e somem (2,4 s, nunca encolhem). Estados: aguardando (2,5 s até detectar) → confirmação (Confirmar) → processando ("Transferindo…"/"Recebendo…" no botão, 2 s) → sucesso (2 s) → comprovante. Sem dupla confirmação, a detecção vai direto ao sucesso. |
+| **Card de banner Aproxime** | 58% da largura, 168 de altura, raio 16, gradiente da ação (índigo · teal · navy) + scrim inferior, botão circular de 32 com seta no topo esquerdo, título `heading/h4` e legenda `caption/md` em branco. Slider com arrastar e snap, sangrando até a borda. |
+| **NearbyAvatar** | Botão circular. **Contato:** foto, borda 1px `border/strong`, ponto online 28% verde `#17B26A` com borda branca. **Aberto:** iniciais 12/600 `#717680` sobre `#F5F5F5`. **Anônimo:** ícone de usuário sobre branco 14%. **Selecionado:** anel de 5 índigo + véu índigo 50%. Entra com "pop" (escala 0 → 1, overshoot). |
+| **Área do Perto de mim** | Plano 300×401 (área de busca) desenhado em CSS 3D. Em perspectiva: `rotateX(62°)`, perspectiva 327, escala .685, só os 3 avatares mais próximos. Arrastar para baixo leva a 0° / escala 1 (visão de cima) e revela os demais do mais perto ao mais longe; a borda mais próxima ocupa a largura − 2×32. Sem rolagem dentro da área. |
+| **NearbyDrawer** | Sobre o BottomSheet. **Contato:** avatar 56, nome `heading/h3`, telefone com ícone, chave Pix em campo somente leitura com IconButton de copiar, Receber (secondary) + Transferir (primary) e últimas transações. **Aberto:** iniciais, telefone parcial ("(15) 997..."), "Adicionar aos contatos". **Anônimo:** "Usuário Desconhecido" + cadeado "Não é possível interagir". |
+| **SettingsCard / SettingsRow** | Padrão "Informações do seu perfil": card branco raio 6 com `elevation/1`, título 20/600 separado por divisória de ponta a ponta; linhas com ícone 22 · valor `body/lg` + legenda `body/md` secundária · ação à direita (Toggle ou chevron). Linhas com conteúdo expandem no lugar (grid 0fr → 1fr, 0,32 s) e o chevron gira 90°. Fundo da página `#EDEDED`, breadcrumb + Fechar no topo. |
+| **ChoiceChips** | Pílulas de 8×14, borda `border/strong`; a escolhida vira índigo com texto branco. |
+| **RadioList** | Bolinha de 20 (anel índigo com miolo branco quando marcada) + label `body/lg` e descrição. |
+| **Toggle / Switch** | Trilho 52×32 (`border/strong` → índigo), thumb branco de 24. |
+| **LiveDot** | Ponto verde de 10 com pulso (algo está ligado agora, ex.: "Me encontre"). |
 
 ---
 
@@ -346,4 +372,20 @@ Para alterar um token, edite `tokens/build.mjs` e rode `node tokens/build.mjs`. 
 cd storybook && npm install && npm run storybook
 ```
 
-Seções: **Introdução** · **Foundations** (primitivas, semânticas por modo, gradientes, tipografia, espaçamento, raios, sombras) · **Components** (Button, IconButton, Badge, TextField, Card, ActionTile, ListItem, InfoBanner, Checkbox, AssistantFab, PageDots, TransactionItem, PaymentCard, BottomNav, AppHeader) · **Web (Mercado Livre)** (botões Andes, header, poly-card, footer) · **Patterns** (8 telas do app recompostas só com o DS). Use a toolbar **Tema** para alternar entre MP Light, MP Dark e ML Web.
+Seções: **Introdução** · **Foundations** (primitivas, semânticas por modo, gradientes, tipografia, espaçamento, raios, sombras) · **Components** (Button, IconButton, Badge, TextField, Card, ActionTile, ListItem, InfoBanner, Checkbox, Switch, SegmentedControl, SectionHeader, AssistantFab, PageDots, TransactionItem, PaymentCard, Receipt, BottomNav, AppHeader; e, em **Aproxime e Perto de mim**: ContactlessIllustration, NearbyAvatar, NearbyDrawer, BottomSheet, SettingsCard/SettingsRow, ChoiceChips, RadioList, Toggle, LiveDot) · **Web (Mercado Livre)** (botões Andes, header, poly-card, footer) · **Patterns** (8 telas do app recompostas só com o DS). Use a toolbar **Tema** para alternar entre MP Light, MP Dark e ML Web.
+
+Versão publicada: **https://meli-prox.vercel.app/storybook/** (o protótipo fica na raiz do mesmo site).
+
+## 9. Histórico de versões
+
+### 1.1.0 · 2026-10-30
+- **Novos componentes:** ContactlessIllustration (+ ContactlessMark), NearbyAvatar, NearbyDrawer, BottomSheet, SettingsCard, SettingsRow, ChoiceChips, RadioList, Toggle e LiveDot, com stories em *Components › Aproxime e Perto de mim*.
+- **BottomSheet:** entrada/saída com ease-out e fechar arrastando para baixo.
+- **Bottom navigation:** label 12/500, 5 entre ícone e label, marcador colado na borda superior.
+- **IconButton brand:** fundo branco 70%. **AppHeader:** avatar com logo (story "Header · avatar com logo").
+- **Tipografia:** `--font-scale` nos estilos `--type-*` (padrão 1, sem mudança para quem não define).
+- **Figma:** componentes Switch, ChoiceChip, SettingsRow e NearbyDrawer; ícones radar, phone, user, user-plus, user-check, refresh-cw, gauge, vibrate e chevron-down; variantes de sucesso do IllustrationContactless corrigidas (SendSuccess amarelo com 💸).
+
+### 1.0.0 · 2026-10-20
+- Tokens (cor, tipografia, espaçamento, raio, sombra, gradiente) em CSS, DTCG e Figma Variables; componentes base do app e da web; Storybook com Foundations, Components, Web e Patterns.
+

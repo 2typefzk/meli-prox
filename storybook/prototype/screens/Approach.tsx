@@ -5,7 +5,7 @@ import receivePhone from "../assets/anima-receive-phone.png";
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import { ArrowRight, Radar, Settings } from "lucide-react";
 import { Button, IconButton, SegmentedControl } from "../../src/components";
-import { ContactlessMark } from "./Contactless";
+import { ContactlessMark } from "../../src/components";
 
 export type ApproachMode = "pay" | "transfer";
 

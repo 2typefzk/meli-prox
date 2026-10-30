@@ -20,3 +20,5 @@ export * from "./Switch";
 export * from "./BottomSheet";
 export * from "./NearbyAvatar";
 export * from "./SettingsList";
+export * from "./ContactlessIllustration";
+export * from "./NearbyDrawer";
